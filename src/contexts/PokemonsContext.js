@@ -7,26 +7,29 @@ const PokemonsContext = createContext();
 export default PokemonsContext;
 
 export function PokemonsProvider({ children }) {
-    const { token } = useContext(UserContext);
-    const [pokemons, setPokemons] = useState(null);
+  const { token } = useContext(UserContext);
+  const [pokemons, setPokemons] = useState(null);
 
-    useEffect(() => {
-        updatePokemons();
-    }, [token?.token]);
+  useEffect(() => {
+    console.log(token);
+    updatePokemons();
+  }, [token]);
 
-    function updatePokemons() {
-        axios.get(`${process.env.REACT_APP_API_BASE_URL}/pokemons`, {
-            headers: {
-                Authorization: `Bearer ${token?.token}`
-            }
-        }).then(response => {
-            setPokemons(response.data);
-        });
-    }
+  function updatePokemons() {
+    axios
+      .get(`${process.env.REACT_APP_API_BASE_URL}/pokemons`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setPokemons(response.data);
+      });
+  }
 
-    return (
-        <PokemonsContext.Provider value={{ pokemons, updatePokemons }}>
-            {children}
-        </PokemonsContext.Provider>
-    );
+  return (
+    <PokemonsContext.Provider value={{ pokemons, updatePokemons }}>
+      {children}
+    </PokemonsContext.Provider>
+  );
 }
